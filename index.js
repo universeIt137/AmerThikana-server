@@ -30,6 +30,7 @@ async function run() {
 
     const contentCollection = client.db('AmerThikana').collection('websiteContent');
     const chairmanCollection = client.db('AmerThikana').collection('chairman');
+    const overviewCollection = client.db('AmerThikana').collection('overview');
 
     app.post('/content', async (req, res) => {
       const data = req.body;
@@ -111,6 +112,50 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await chairmanCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    // project overview api 
+    app.post('/overview', async (req, res) => {
+      const data = req.body;
+      const result = await overviewCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/overview', async (req, res) => {
+      const result = await overviewCollection.find().toArray();
+      res.send(result);
+    })
+
+
+    app.get('/overview/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await overviewCollection.findOne(query);
+      res.send(result);
+    })
+
+
+    app.put('/overview/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await overviewCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/overview/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await overviewCollection.deleteOne(query);
       res.send(result);
     })
 
