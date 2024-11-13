@@ -31,6 +31,7 @@ async function run() {
     const contentCollection = client.db('AmerThikana').collection('websiteContent');
     const chairmanCollection = client.db('AmerThikana').collection('chairman');
     const overviewCollection = client.db('AmerThikana').collection('overview');
+    const featureCollection = client.db('AmerThikana').collection('feature');
 
     app.post('/content', async (req, res) => {
       const data = req.body;
@@ -158,6 +159,66 @@ async function run() {
       const result = await overviewCollection.deleteOne(query);
       res.send(result);
     })
+
+    // project feature related api
+    app.post('/feature', async (req, res) => {
+      const data = req.body;
+      const result = await featureCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/feature', async (req, res) => {
+      const result = await featureCollection.find().toArray();
+      res.send(result);
+    })
+
+
+    app.get('/feature/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await featureCollection.findOne(query);
+      res.send(result);
+    })
+
+
+    app.put('/feature/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await featureCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+    app.delete('/feature/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await featureCollection.deleteOne(query);
+      res.send(result);
+    })
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
