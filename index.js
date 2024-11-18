@@ -230,14 +230,22 @@ async function run() {
 
       const result = await aboutUsCollection.updateOne(query, updatedInfo, options);
       res.send(result);
-    })
+    });
 
-    app.delete("/about-us/:id",async (req,res)=>{
+    app.delete("/about-us/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await aboutUsCollection.deleteOne(query);
       res.send(result);
+    });
+
+    app.get("/about-us/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await aboutUsCollection.findOne(query);
+      res.send(result);
     })
+
 
 
 
