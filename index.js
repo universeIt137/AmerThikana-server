@@ -259,6 +259,20 @@ async function run() {
       const data = req.body;
       const result = await scheduleCollection.insertOne(data);
       res.send(result);
+    });
+
+    app.put("/schedule/:id", async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      };
+      const result = await scheduleCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
     })
 
 
