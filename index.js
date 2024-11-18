@@ -32,9 +32,10 @@ async function run() {
     const chairmanCollection = client.db('AmerThikana').collection('chairman');
     const overviewCollection = client.db('AmerThikana').collection('overview');
     const featureCollection = client.db('AmerThikana').collection('feature');
-    const aboutUsCollection = client.db('AmerThikana').collection('aboutUs');
+    const aboutUsCollection = client.db('AmerThikana').collection('client-reviews');
     const scheduleCollection = client.db('AmerThikana').collection('schedules');
     const whyOurProjectBest = client.db('AmerThikana').collection('why-best-projects');
+    const websiteContentCollection = client.db('AmerThikana').collection('website-content-real-states');
 
     //website content
     app.post('/content', async (req, res) => {
@@ -332,7 +333,18 @@ async function run() {
       res.send(result);
     });
 
-    
+    app.get("/best-project", async (req, res) => {
+      let result = await whyOurProjectBest.find().toArray();
+      res.send(result);
+    });
+
+    // website content related api
+
+    app.post("/website-content", async (req, res) => {
+      let reqBody = req.body;
+      let result = await websiteContentCollection.insertOne(reqBody);
+      res.send(result);
+    });
 
 
 
