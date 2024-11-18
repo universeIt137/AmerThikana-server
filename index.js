@@ -276,30 +276,65 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/schedule/:id",async function(req, res) {
+    app.delete("/schedule/:id", async function (req, res) {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await scheduleCollection.deleteOne(query);
       res.send(result);
     });
 
-    app.get("/schedule/:id",async(req,res) =>{
+    app.get("/schedule/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await scheduleCollection.findOne(query);
       res.send(result);
     });
 
-    app.get("/schedule",async(req,res)=>{
+    app.get("/schedule", async (req, res) => {
       const result = await scheduleCollection.find().toArray();
       res.send(result);
     });
 
-    app.post("/best-project", async(req,res)=>{
+    // why our project best related api
+
+    app.post("/best-project", async (req, res) => {
       let reqBody = req.body;
       let result = await whyOurProjectBest.insertOne(reqBody);
       res.send(result);
     });
+
+    app.put("/best-project/:id", async (req, res) => {
+      let data = req.body;
+      let id = req.params.id;
+      let query = { _id: new ObjectId(id) };
+      let options = { upsert: true };
+      let updatedInfo = {
+        $set: {
+          ...data
+        }
+      };
+      let result = await whyOurProjectBest.updateOne(query, updatedInfo, options);
+      res.send(result);
+    }); //
+
+    app.delete("/best-project/:id", async (req, res) => {
+      let id = req.params.id;
+      let query = { _id: new ObjectId(id) };
+      let result = await whyOurProjectBest.deleteOne(query);
+      res.send(result);
+    }
+    );
+
+    app.get("/best-project/:id", async (req, res) => {
+      let id = req.params.id;
+      let query = { _id: new ObjectId(id) };
+      let result = await whyOurProjectBest.findOne(query);
+      res.send(result);
+    });
+
+    
+
+
 
 
 
