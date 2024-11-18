@@ -36,6 +36,7 @@ async function run() {
     const scheduleCollection = client.db('AmerThikana').collection('schedules');
     const whyOurProjectBest = client.db('AmerThikana').collection('why-best-projects');
     const websiteContentCollection = client.db('AmerThikana').collection('website-content-real-states');
+    const clientReviewCollection = client.db('AmerThikana').collection('client-review');
 
     //website content
     app.post('/content', async (req, res) => {
@@ -378,6 +379,51 @@ async function run() {
       let result = await websiteContentCollection.find().toArray();
       res.send(result);
     });
+
+    // client reviewed related api
+
+    app.post("/client-review", async (req, res) => {
+      let reqBody = req.body;
+      let result = await clientReviewCollection.insertOne(reqBody);
+      res.send(result);
+    });
+
+    app.put("/client-review/:id", async (req, res) => {
+      let data = req.body;
+      let id = req.params.id;
+      let query = { _id: new ObjectId(id) };
+      let options = { upsert: true };
+      let updatedInfo = {
+        $set: {
+          ...data
+        }
+      };
+      let result = await clientReviewCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    });
+
+    app.delete("/client-review/:id", async(req,res)=>{
+      let id = req.params.id;
+      let query = { _id: new ObjectId(id) };
+      let result = await clientReviewCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    app.get("/client-review/:id", async (req, res) => {
+      let id = req.params.id;
+      let query = { _id: new ObjectId(id) };
+      let result = await clientReviewCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.get("/client-review", async (req, res) => {
+      let result = await clientReviewCollection.find().toArray();
+      res.send(result);
+    });
+
+
+
+
 
 
 
