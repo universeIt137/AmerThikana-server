@@ -244,6 +244,11 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await aboutUsCollection.findOne(query);
       res.send(result);
+    });
+
+    app.get("/about-us", async (req, res) => {
+      const result = await aboutUsCollection.find().toArray();
+      res.send(result);
     })
 
 
