@@ -34,6 +34,7 @@ async function run() {
     const featureCollection = client.db('AmerThikana').collection('feature');
     const aboutUsCollection = client.db('AmerThikana').collection('aboutUs');
     const scheduleCollection = client.db('AmerThikana').collection('schedules');
+    const whyOurProjectBest = client.db('AmerThikana').collection('why-best-projects');
 
     //website content
     app.post('/content', async (req, res) => {
@@ -292,8 +293,13 @@ async function run() {
     app.get("/schedule",async(req,res)=>{
       const result = await scheduleCollection.find().toArray();
       res.send(result);
-    })
+    });
 
+    app.post("/best-project", async(req,res)=>{
+      let reqBody = req.body;
+      let result = await whyOurProjectBest.insertOne(reqBody);
+      res.send(result);
+    });
 
 
 
