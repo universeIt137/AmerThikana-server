@@ -33,6 +33,7 @@ async function run() {
     const overviewCollection = client.db('AmerThikana').collection('overview');
     const featureCollection = client.db('AmerThikana').collection('feature');
     const aboutUsCollection = client.db('AmerThikana').collection('aboutUs');
+    const scheduleCollection = client.db('AmerThikana').collection('schedules');
 
     //website content
     app.post('/content', async (req, res) => {
@@ -248,6 +249,15 @@ async function run() {
 
     app.get("/about-us", async (req, res) => {
       const result = await aboutUsCollection.find().toArray();
+      res.send(result);
+    });
+
+
+    // schedule related api
+
+    app.post('/schedule', async (req, res) => {
+      const data = req.body;
+      const result = await scheduleCollection.insertOne(data);
       res.send(result);
     })
 
