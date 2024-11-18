@@ -367,6 +367,18 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/website-content/:id", async (req, res) => {
+      let id = req.params.id;
+      let query = { _id: new ObjectId(id) };
+      let result = await websiteContentCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.get("/website-content", async (req, res) => {
+      let result = await websiteContentCollection.find().toArray();
+      res.send(result);
+    });
+
 
 
 
