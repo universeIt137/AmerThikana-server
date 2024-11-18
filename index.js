@@ -32,7 +32,9 @@ async function run() {
     const chairmanCollection = client.db('AmerThikana').collection('chairman');
     const overviewCollection = client.db('AmerThikana').collection('overview');
     const featureCollection = client.db('AmerThikana').collection('feature');
+    const aboutUsCollection = client.db('AmerThikana').collection('aboutUs');
 
+    //website content
     app.post('/content', async (req, res) => {
       const data = req.body;
       const result = await contentCollection.insertOne(data);
@@ -202,7 +204,43 @@ async function run() {
       const result = await featureCollection.deleteOne(query);
       res.send(result);
     })
-    
+
+    // about us related api
+
+    app.post("/about-us", async (req, res) => {
+      try {
+        let reqBody = req.body;
+        let data = await aboutUsCollection.insertOne(reqBody);
+        return res.send(data);
+      } catch (error) {
+        return res.send(error);
+      }
+    });
+
+    app.put('/about-us/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await aboutUsCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+    app.delete("/about-us/:id",async (req,res)=>{
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await aboutUsCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
+
 
 
 
