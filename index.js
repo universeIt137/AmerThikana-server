@@ -32,7 +32,7 @@ async function run() {
     const chairmanCollection = client.db('AmerThikana').collection('chairman');
     const overviewCollection = client.db('AmerThikana').collection('overview');
     const featureCollection = client.db('AmerThikana').collection('feature');
-    const aboutUsCollection = client.db('AmerThikana').collection('client-reviews');
+    const aboutUsCollection = client.db('AmerThikana').collection('about-us');
     const scheduleCollection = client.db('AmerThikana').collection('schedules');
     const whyOurProjectBest = client.db('AmerThikana').collection('why-best-projects');
     const websiteContentCollection = client.db('AmerThikana').collection('website-content-real-states');
@@ -357,6 +357,13 @@ async function run() {
         }
       };
       let result = await websiteContentCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    });
+
+    app.delete("/website-content/:id", async (req, res) => {
+      let id = req.params.id;
+      let query = { _id: new ObjectId(id) };
+      let result = await websiteContentCollection.deleteOne(query);
       res.send(result);
     });
 
