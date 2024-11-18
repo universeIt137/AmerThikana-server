@@ -346,6 +346,20 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/website-content/:id", async (req, res) => {
+      let data = req.body;
+      let id = req.params.id;
+      let query = { _id: new ObjectId(id) };
+      let options = { upsert: true };
+      let updatedInfo = {
+        $set: {
+          ...data
+        }
+      };
+      let result = await websiteContentCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    });
+
 
 
 
