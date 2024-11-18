@@ -273,7 +273,14 @@ async function run() {
       };
       const result = await scheduleCollection.updateOne(query, updatedInfo, options);
       res.send(result);
-    })
+    });
+
+    app.delete("/schedule/:id",async function(req, res) {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await scheduleCollection.deleteOne(query);
+      res.send(result);
+    });
 
 
 
