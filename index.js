@@ -289,6 +289,11 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/schedule",async(req,res)=>{
+      const result = await scheduleCollection.find().toArray();
+      res.send(result);
+    })
+
 
 
 
