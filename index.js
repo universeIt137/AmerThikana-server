@@ -260,7 +260,9 @@ async function run() {
 
     app.post('/schedule', async (req, res) => {
       const data = req.body;
-      const result = await scheduleCollection.insertOne(data);
+
+
+      const result = await scheduleCollection.insertOne({ data, status: false });
       res.send(result);
     });
 
@@ -296,6 +298,20 @@ async function run() {
       const result = await scheduleCollection.find().toArray();
       res.send(result);
     });
+
+    app.put("/schedule-status-update/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: { status: true }, // Use $set to update the status field
+      };
+
+      const result = await scheduleCollection.updateOne(query, updateDoc, options);
+      res.send(result);
+    });
+
+
 
     // why our project best related api
 
@@ -402,7 +418,7 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/client-review/:id", async(req,res)=>{
+    app.delete("/client-review/:id", async (req, res) => {
       let id = req.params.id;
       let query = { _id: new ObjectId(id) };
       let result = await clientReviewCollection.deleteOne(query);
