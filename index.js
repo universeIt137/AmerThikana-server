@@ -260,7 +260,7 @@ async function run() {
 
     app.post('/schedule', async (req, res) => {
       const data = req.body;
-      
+
 
       const result = await scheduleCollection.insertOne({ data, status: false });
       res.send(result);
@@ -296,6 +296,18 @@ async function run() {
 
     app.get("/schedule", async (req, res) => {
       const result = await scheduleCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.put("/schedule-status-update/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: { status: true }, // Use $set to update the status field
+      };
+
+      const result = await scheduleCollection.updateOne(query, updateDoc, options);
       res.send(result);
     });
 
