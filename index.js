@@ -578,8 +578,13 @@ async function run() {
 
     app.post("/contact", async function(req,res){
         let data = req.body;
-        let  userEmail = await sendNotificationEmail(data);
-        res.send(userEmail);
+          userEmail = await sendNotificationEmail(data);
+          if(userEmail){
+            return res.send("email send");
+          }else{
+            return res.send("email not send");
+          }
+        
     })
 
 
