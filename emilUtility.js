@@ -9,7 +9,6 @@ let transporter = nodemailer.createTransport({
 });
 
 async function sendNotificationEmail(data) {
-    console.log(data)
     try {
         let info = await transporter.sendMail({
             from: '"Project Notifications" ishanrana094@gmail.com ',
