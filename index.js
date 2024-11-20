@@ -43,8 +43,6 @@ async function run() {
     const certificationCollection = client.db('AmerThikana').collection('certification');
     const contactCollection = client.db('AmerThikana').collection('contac');
 
-    const offerCollection = client.db('AmerThikana').collection('offer');
-
     //website content
     app.post('/content', async (req, res) => {
       const data = req.body;
@@ -529,7 +527,7 @@ async function run() {
       res.send(result);
     });
 
-
+    
 
     // certification related api 
     app.post('/certificate', async (req, res) => {
@@ -582,53 +580,11 @@ async function run() {
           if(userEmail){
             return res.send("email send");
           }else{
-            return res.send("email not send");
+            res.send("email send fail ");
           }
-        
     })
 
 
-    // offer related api 
-    app.post('/offer', async (req, res) => {
-      const data = req.body;
-      const result = await offerCollection.insertOne(data);
-      res.send(result);
-    })
-
-    app.get('/offer', async (req, res) => {
-      const result = await offerCollection.find().toArray();
-      res.send(result);
-    })
-
-    app.get('/offer/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await offerCollection.findOne(query);
-      res.send(result);
-    })
-
-    app.put('/offer/:id', async (req, res) => {
-      const data = req.body;
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const options = { upsert: true };
-      const updatedInfo = {
-        $set: {
-          ...data
-        }
-      }
-
-      const result = await offerCollection.updateOne(query, updatedInfo, options);
-      res.send(result);
-    })
-
-
-    app.delete('/offer/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await offerCollection.deleteOne(query);
-      res.send(result);
-    })
 
 
 
