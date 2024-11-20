@@ -496,6 +496,25 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/banner", async (req, res) => {
+      const result = await bannerCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.put("/banner/:id", async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      };
+      const result = await bannerCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    });
+
 
 
 
