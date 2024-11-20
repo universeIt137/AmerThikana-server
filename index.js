@@ -485,9 +485,9 @@ async function run() {
     })
 
 
-     // banner related api
+    // banner related api
 
-     app.post('/banner', async (req, res) => {
+    app.post('/banner', async (req, res) => {
       const data = req.body;
       const result = await bannerCollection.insertOne(data);
       res.send(result);
@@ -520,14 +520,14 @@ async function run() {
     });
 
 
-    app.delete("/banner/:id",async(req,res)=>{
+    app.delete("/banner/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await bannerCollection.deleteOne(query);
       res.send(result);
     });
 
-    
+
 
     // certification related api 
     app.post('/certificate', async (req, res) => {
@@ -574,14 +574,14 @@ async function run() {
 
     // contact related api
 
-    app.post("/contact", async function(req,res){
-        let data = req.body;
-          userEmail = await sendNotificationEmail(data);
-          if(userEmail){
-            return res.send("email send");
-          }else{
-            res.send("email send fail ");
-          }
+    app.post("/contact", async function (req, res) {
+      let data = req.body;
+      let userEmail = await sendNotificationEmail(data);
+      if (userEmail) {
+        return res.send("email send");
+      } else {
+        res.send("email send fail ");
+      }
     })
 
 
