@@ -43,6 +43,8 @@ async function run() {
     const certificationCollection = client.db('AmerThikana').collection('certification');
     const offerCollection = client.db('AmerThikana').collection('offer');
     const careerCollection = client.db('AmerThikana').collection('career');
+    const imageCollection = client.db('AmerThikana').collection('image');
+    const videoCollection = client.db('AmerThikana').collection('video');
 
 
     //website content
@@ -672,7 +674,90 @@ async function run() {
       res.send(result);
     })
 
+    // image gallery related api 
+    app.post('/imageGallery', async (req, res) => {
+      const data = req.body;
+      const result = await imageCollection.insertOne(data);
+      res.send(result);
+    })
 
+    app.get('/imageGallery', async (req, res) => {
+      const result = await imageCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/imageGallery/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await imageCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/imageGallery/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await imageCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/imageGallery/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await imageCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
+    // video Gallery api 
+    app.post('/videoGallery', async (req, res) => {
+      const data = req.body;
+      const result = await videoCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/videoGallery', async (req, res) => {
+      const result = await videoCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/videoGallery/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await videoCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/videoGallery/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await videoCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/videoGallery/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await videoCollection.deleteOne(query);
+      res.send(result);
+    })
 
 
 
