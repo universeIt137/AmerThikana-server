@@ -42,6 +42,7 @@ async function run() {
     const bannerCollection = client.db('AmerThikana').collection('banner');
     const certificationCollection = client.db('AmerThikana').collection('certification');
     const offerCollection = client.db('AmerThikana').collection('offer');
+    const careerCollection = client.db('AmerThikana').collection('career');
 
 
     //website content
@@ -628,12 +629,48 @@ async function run() {
     })
 
 
-    // app.delete('/offer/:id', async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: new ObjectId(id) };
-    //   const result = await offerCollection.deleteOne(query);
-    //   res.send(result);
-    // })
+    // career related api
+
+    app.post('/career', async (req, res) => {
+      const data = req.body;
+      const result = await careerCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/career', async (req, res) => {
+      const result = await careerCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/career/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await careerCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/career/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await careerCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/career/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await careerCollection.deleteOne(query);
+      res.send(result);
+    })
 
 
 
