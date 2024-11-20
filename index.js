@@ -39,6 +39,7 @@ async function run() {
     const clientReviewCollection = client.db('AmerThikana').collection('client-review');
     const csrCollection = client.db('AmerThikana').collection('csr');
     const bannerCollection = client.db('AmerThikana').collection('banner');
+    const certificationCollection = client.db('AmerThikana').collection('certification');
 
     //website content
     app.post('/content', async (req, res) => {
@@ -479,11 +480,12 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await csrCollection.deleteOne(query);
       res.send(result);
-    });
+    })
 
-    // banner related api
 
-    app.post('/banner', async (req, res) => {
+     // banner related api
+
+     app.post('/banner', async (req, res) => {
       const data = req.body;
       const result = await bannerCollection.insertOne(data);
       res.send(result);
@@ -522,6 +524,50 @@ async function run() {
       const result = await bannerCollection.deleteOne(query);
       res.send(result);
     });
+
+    
+
+    // certification related api 
+    app.post('/certificate', async (req, res) => {
+      const data = req.body;
+      const result = await certificationCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/certificate', async (req, res) => {
+      const result = await certificationCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/certificate/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await certificationCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/certificate/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await certificationCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/certificate/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await certificationCollection.deleteOne(query);
+      res.send(result);
+    })
 
 
 
