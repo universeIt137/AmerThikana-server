@@ -42,6 +42,8 @@ async function run() {
     const bannerCollection = client.db('AmerThikana').collection('banner');
     const certificationCollection = client.db('AmerThikana').collection('certification');
     const offerCollection = client.db('AmerThikana').collection('offer');
+    const videoGallery = client.db('AmerThikana').collection('videoGallery');
+
 
 
     //website content
@@ -634,6 +636,8 @@ async function run() {
     //   const result = await offerCollection.deleteOne(query);
     //   res.send(result);
     // })
+
+    
 
 
 
