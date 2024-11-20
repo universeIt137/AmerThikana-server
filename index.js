@@ -12,6 +12,7 @@ app.use(express.json());
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const sendNotificationEmail = require('./emilUtility');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster1.olinusx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -40,7 +41,7 @@ async function run() {
     const csrCollection = client.db('AmerThikana').collection('csr');
     const bannerCollection = client.db('AmerThikana').collection('banner');
     const certificationCollection = client.db('AmerThikana').collection('certification');
-    const offerCollection = client.db('AmerThikana').collection('offer');
+
 
     //website content
     app.post('/content', async (req, res) => {
@@ -526,7 +527,7 @@ async function run() {
       res.send(result);
     });
 
-
+    
 
     // certification related api 
     app.post('/certificate', async (req, res) => {
@@ -568,50 +569,22 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await certificationCollection.deleteOne(query);
       res.send(result);
+    });
+
+
+    // contact related api
+
+    app.post("/contact", async function(req,res){
+        let data = req.body;
+          userEmail = await sendNotificationEmail(data);
+          if(userEmail){
+            return res.send("email send");
+          }else{
+            res.send("email send fail ");
+          }
     })
 
 
-    // offer related api 
-    app.post('/offer', async (req, res) => {
-      const data = req.body;
-      const result = await offerCollection.insertOne(data);
-      res.send(result);
-    })
-
-    app.get('/offer', async (req, res) => {
-      const result = await offerCollection.find().toArray();
-      res.send(result);
-    })
-
-    app.get('/offer/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await offerCollection.findOne(query);
-      res.send(result);
-    })
-
-    app.put('/offer/:id', async (req, res) => {
-      const data = req.body;
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const options = { upsert: true };
-      const updatedInfo = {
-        $set: {
-          ...data
-        }
-      }
-
-      const result = await offerCollection.updateOne(query, updatedInfo, options);
-      res.send(result);
-    })
-
-
-    app.delete('/offer/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await offerCollection.deleteOne(query);
-      res.send(result);
-    })
 
     // app.delete('/offer/:id', async (req, res) => {
     //   const id = req.params.id;
