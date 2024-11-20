@@ -37,6 +37,7 @@ async function run() {
     const whyOurProjectBest = client.db('AmerThikana').collection('why-best-projects');
     const websiteContentCollection = client.db('AmerThikana').collection('website-content-real-states');
     const clientReviewCollection = client.db('AmerThikana').collection('client-review');
+    const csrCollection = client.db('AmerThikana').collection('csr');
 
     //website content
     app.post('/content', async (req, res) => {
@@ -437,6 +438,47 @@ async function run() {
       res.send(result);
     });
 
+
+    // CSR related api
+
+    app.post('/csr', async (req, res) => {
+      const data = req.body;
+      const result = await csrCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/csr', async (req, res) => {
+      const result = await csrCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/csr/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await csrCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/csr/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+      const result = await csrCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+    app.delete('/csr/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await csrCollection.deleteOne(query);
+      res.send(result);
+    })
 
 
 
