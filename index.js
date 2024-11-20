@@ -482,6 +482,51 @@ async function run() {
       res.send(result);
     })
 
+
+     // banner related api
+
+     app.post('/banner', async (req, res) => {
+      const data = req.body;
+      const result = await bannerCollection.insertOne(data);
+      res.send(result);
+    });
+
+    app.get("/banner/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bannerCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.get("/banner", async (req, res) => {
+      const result = await bannerCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.put("/banner/:id", async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      };
+      const result = await bannerCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    });
+
+
+    app.delete("/banner/:id",async(req,res)=>{
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bannerCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    
+
     // certification related api 
     app.post('/certificate', async (req, res) => {
       const data = req.body;
