@@ -38,6 +38,7 @@ async function run() {
     const websiteContentCollection = client.db('AmerThikana').collection('website-content-real-states');
     const clientReviewCollection = client.db('AmerThikana').collection('client-review');
     const csrCollection = client.db('AmerThikana').collection('csr');
+    const bannerCollection = client.db('AmerThikana').collection('banner');
     const certificationCollection = client.db('AmerThikana').collection('certification');
 
     //website content
