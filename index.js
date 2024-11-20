@@ -41,7 +41,7 @@ async function run() {
     const csrCollection = client.db('AmerThikana').collection('csr');
     const bannerCollection = client.db('AmerThikana').collection('banner');
     const certificationCollection = client.db('AmerThikana').collection('certification');
-    const contactCollection = client.db('AmerThikana').collection('contac');
+
 
     //website content
     app.post('/content', async (req, res) => {
@@ -584,6 +584,14 @@ async function run() {
           }
     })
 
+
+
+    // app.delete('/offer/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) };
+    //   const result = await offerCollection.deleteOne(query);
+    //   res.send(result);
+    // })
 
 
 
