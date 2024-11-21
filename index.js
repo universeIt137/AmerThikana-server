@@ -45,6 +45,8 @@ async function run() {
     const careerCollection = client.db('AmerThikana').collection('career');
     const imageCollection = client.db('AmerThikana').collection('image');
     const videoCollection = client.db('AmerThikana').collection('video');
+    const applyCollection = client.db('AmerThikana').collection('apply');
+
 
 
     //website content
@@ -489,9 +491,9 @@ async function run() {
     })
 
 
-    // banner related api
+     // banner related api
 
-    app.post('/banner', async (req, res) => {
+     app.post('/banner', async (req, res) => {
       const data = req.body;
       const result = await bannerCollection.insertOne(data);
       res.send(result);
@@ -524,14 +526,14 @@ async function run() {
     });
 
 
-    app.delete("/banner/:id", async (req, res) => {
+    app.delete("/banner/:id",async(req,res)=>{
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await bannerCollection.deleteOne(query);
       res.send(result);
     });
 
-
+    
 
     // certification related api 
     app.post('/certificate', async (req, res) => {
@@ -578,14 +580,14 @@ async function run() {
 
     // contact related api
 
-    app.post("/contact", async function (req, res) {
-      let data = req.body;
-      userEmail = await sendNotificationEmail(data);
-      if (userEmail) {
-        return res.send("email send");
-      } else {
-        res.send("email send fail ");
-      }
+    app.post("/contact", async function(req,res){
+        let data = req.body;
+          userEmail = await sendNotificationEmail(data);
+          if(userEmail){
+            return res.send("email send");
+          }else{
+            res.send("email send fail ");
+          }
     })
 
     // offer related api 
@@ -758,6 +760,69 @@ async function run() {
       const result = await videoCollection.deleteOne(query);
       res.send(result);
     })
+
+
+    // apply related api
+    
+    app.post('/apply', async (req, res) => {
+      const data = req.body;
+      const result = await applyCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/apply', async (req, res) => {
+      const result = await applyCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/apply/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await applyCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/apply/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await applyCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/apply/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await applyCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    app.patch('/apply/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          status: 'confirmed'
+        }
+      }
+
+      const result = await applyCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    })
+
+
+
+
+
+
 
 
 
