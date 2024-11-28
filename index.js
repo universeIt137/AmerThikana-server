@@ -46,6 +46,7 @@ async function run() {
     const imageCollection = client.db('AmerThikana').collection('image');
     const videoCollection = client.db('AmerThikana').collection('video');
     const applyCollection = client.db('AmerThikana').collection('apply');
+    const characteristicCollection = client.db('AmerThikana').collection('characteristic');
 
 
 
@@ -821,6 +822,60 @@ async function run() {
 
 
 
+    // characteristics related api 
+    app.post('/character', async (req, res) => {
+      const data = req.body;
+      const result = await characteristicCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/character', async (req, res) => {
+      const result = await characteristicCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/character/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await characteristicCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/character/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await characteristicCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/character/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await characteristicCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    app.patch('/character/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          status: 'confirmed'
+        }
+      }
+
+      const result = await characteristicCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    })
 
 
 
