@@ -47,6 +47,7 @@ async function run() {
     const videoCollection = client.db('AmerThikana').collection('video');
     const applyCollection = client.db('AmerThikana').collection('apply');
     const characteristicCollection = client.db('AmerThikana').collection('characteristic');
+    const currentImageCollection = client.db('AmerThikana').collection('currentImage');
 
 
 
@@ -876,6 +877,53 @@ async function run() {
       const result = await characteristicCollection.updateOne(filter, updatedDoc);
       res.send(result);
     })
+
+
+
+    // current project image related api 
+    app.post('/current-image', async (req, res) => {
+      const data = req.body;
+      const result = await currentImageCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/current-image', async (req, res) => {
+      const result = await currentImageCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/current-image/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await currentImageCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/current-image/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await currentImageCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/current-image/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await currentImageCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
+
 
 
 
