@@ -51,6 +51,7 @@ async function run() {
     const privacyCollection = client.db('AmerThikana').collection('privacy');
     const managementCollection = client.db('AmerThikana').collection('management');
     const marketingCollection = client.db('AmerThikana').collection('marketing');
+    const top3Collection = client.db('AmerThikana').collection('top3');
 
 
 
@@ -1055,19 +1056,68 @@ async function run() {
       res.send(result);
     })
 
-    
-
-
-
+    // top 3 related api
 
     
+    app.post('/top3', async (req, res) => {
+      const data = req.body;
+      const result = await top3Collection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/top3', async (req, res) => {
+      const result = await top3Collection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/top3/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await top3Collection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/top3/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await top3Collection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/top3/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await top3Collection.deleteOne(query);
+      res.send(result);
+    })
 
 
 
 
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
