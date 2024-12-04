@@ -48,6 +48,9 @@ async function run() {
     const applyCollection = client.db('AmerThikana').collection('apply');
     const characteristicCollection = client.db('AmerThikana').collection('characteristic');
     const currentImageCollection = client.db('AmerThikana').collection('currentImage');
+    const privacyCollection = client.db('AmerThikana').collection('privacy');
+    const managementCollection = client.db('AmerThikana').collection('management');
+    const marketingCollection = client.db('AmerThikana').collection('marketing');
 
 
 
@@ -493,9 +496,9 @@ async function run() {
     })
 
 
-     // banner related api
+    // banner related api
 
-     app.post('/banner', async (req, res) => {
+    app.post('/banner', async (req, res) => {
       const data = req.body;
       const result = await bannerCollection.insertOne(data);
       res.send(result);
@@ -528,14 +531,14 @@ async function run() {
     });
 
 
-    app.delete("/banner/:id",async(req,res)=>{
+    app.delete("/banner/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await bannerCollection.deleteOne(query);
       res.send(result);
     });
 
-    
+
 
     // certification related api 
     app.post('/certificate', async (req, res) => {
@@ -582,14 +585,14 @@ async function run() {
 
     // contact related api
 
-    app.post("/contact", async function(req,res){
-        let data = req.body;
-          userEmail = await sendNotificationEmail(data);
-          if(userEmail){
-            return res.send("email send");
-          }else{
-            res.send("email send fail ");
-          }
+    app.post("/contact", async function (req, res) {
+      let data = req.body;
+      userEmail = await sendNotificationEmail(data);
+      if (userEmail) {
+        return res.send("email send");
+      } else {
+        res.send("email send fail ");
+      }
     })
 
     // offer related api 
@@ -765,7 +768,7 @@ async function run() {
 
 
     // apply related api
-    
+
     app.post('/apply', async (req, res) => {
       const data = req.body;
       const result = await applyCollection.insertOne(data);
@@ -921,6 +924,153 @@ async function run() {
       const result = await currentImageCollection.deleteOne(query);
       res.send(result);
     })
+
+
+
+    // api for privacy policy
+    app.post('/privacy', async (req, res) => {
+      const data = req.body;
+      const result = await privacyCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/privacy', async (req, res) => {
+      const result = await privacyCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/privacy/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await privacyCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/privacy/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await privacyCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/privacy/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await privacyCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
+    // management team related api 
+    app.post('/management', async (req, res) => {
+      const data = req.body;
+      const result = await managementCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/management', async (req, res) => {
+      const result = await managementCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/management/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await managementCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/management/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await managementCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/management/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await managementCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
+    // marketing team related api 
+    app.post('/marketing', async (req, res) => {
+      const data = req.body;
+      const result = await marketingCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/marketing', async (req, res) => {
+      const result = await marketingCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/marketing/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await marketingCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/marketing/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await marketingCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/marketing/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await marketingCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    
+
+
+
+
+    
+
+
+
+
+
+
+    
+
+
+
 
 
 
