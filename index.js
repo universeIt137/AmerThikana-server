@@ -52,6 +52,8 @@ async function run() {
     const managementCollection = client.db('AmerThikana').collection('management');
     const marketingCollection = client.db('AmerThikana').collection('marketing');
     const top3Collection = client.db('AmerThikana').collection('top3');
+    const bookingFormCollection = client.db('AmerThikana').collection('bookingForm');
+    const projectPriceCollection = client.db('AmerThikana').collection('projectPrice');
 
 
 
@@ -1099,6 +1101,101 @@ async function run() {
       const result = await top3Collection.deleteOne(query);
       res.send(result);
     })
+
+
+    // booking form related api 
+     app.post('/booking-form', async (req, res) => {
+      const data = req.body;
+      const result = await bookingFormCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/booking-form', async (req, res) => {
+      const result = await bookingFormCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/booking-form/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingFormCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/booking-form/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await bookingFormCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/booking-form/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingFormCollection.deleteOne(query);
+      res.send(result);
+    })
+
+   
+
+    // project price related api 
+    app.post('/project-price', async (req, res) => {
+      const data = req.body;
+      const result = await projectPriceCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/project-price', async (req, res) => {
+      const result = await projectPriceCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/project-price/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await projectPriceCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/project-price/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await projectPriceCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/project-price/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await projectPriceCollection.deleteOne(query);
+      res.send(result);
+    })
+
+   
+
+
+
+
+
+
 
 
 
