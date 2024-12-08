@@ -55,6 +55,7 @@ async function run() {
     const bookingFormCollection = client.db('AmerThikana').collection('bookingForm');
     const projectPriceCollection = client.db('AmerThikana').collection('projectPrice');
     const PlotCategoryCollection = client.db('AmerThikana').collection('PlotCategory');
+    const bankInfoCollection = client.db('AmerThikana').collection('bankInfo');
 
 
 
@@ -1233,6 +1234,55 @@ async function run() {
     })
 
     
+    // api for banking information
+
+    app.post('/bank-info', async (req, res) => {
+      const data = req.body;
+      const result = await bankInfoCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/bank-info', async (req, res) => {
+      const result = await bankInfoCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/bank-info/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bankInfoCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/bank-info/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await bankInfoCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/bank-info/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bankInfoCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    
+
+
+
+
+
 
 
 
