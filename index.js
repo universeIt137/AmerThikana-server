@@ -54,6 +54,7 @@ async function run() {
     const top3Collection = client.db('AmerThikana').collection('top3');
     const bookingFormCollection = client.db('AmerThikana').collection('bookingForm');
     const projectPriceCollection = client.db('AmerThikana').collection('projectPrice');
+    const PlotCategoryCollection = client.db('AmerThikana').collection('PlotCategory');
 
 
 
@@ -1188,6 +1189,54 @@ async function run() {
       const result = await projectPriceCollection.deleteOne(query);
       res.send(result);
     })
+
+    // plot related api 
+    app.post('/plot-category', async (req, res) => {
+      const data = req.body;
+      const result = await PlotCategoryCollection.insertOne(data);
+      res.send(result);
+    })
+
+    app.get('/plot-category', async (req, res) => {
+      const result = await PlotCategoryCollection.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/plot-category/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await PlotCategoryCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/plot-category/:id', async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedInfo = {
+        $set: {
+          ...data
+        }
+      }
+
+      const result = await PlotCategoryCollection.updateOne(query, updatedInfo, options);
+      res.send(result);
+    })
+
+
+    app.delete('/plot-category/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await PlotCategoryCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    
+
+
+
+
 
    
 
