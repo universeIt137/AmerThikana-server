@@ -1372,6 +1372,18 @@ async function run() {
     });
 
 
+    app.delete("/user-delete/:id", (req, res) => {
+      let id = new ObjectId(req.params.id);
+      const filter = {
+        _id: id
+      };
+
+      const user = userCollection.deleteOne(filter);
+      res.send(user)
+
+    })
+
+
 
 
 
