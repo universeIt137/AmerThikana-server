@@ -1335,23 +1335,40 @@ async function run() {
 
     app.post("/user-login", async (req, res) => {
       const { phoneNumber, password, confirmedPassword } = req.body;
-      const user = await userCollection.findOne({ phoneNumber: phoneNumber, password: password, confirmedPassword: confirmedPassword });
+      const user = await userCollection.findOne({ phoneNumber: phoneNumber, password: password, confirmedPassword: confirmedPassword, role: "admin" });
       if (!user) {
         return res.status(404).json({
           status: "fail",
-          msg : "Invalid creadential"
+          msg: "Invalid creadential"
         })
       };
 
       const key = process.env.JWT_KEY
 
-      const token = jwt.sign({ id: user._id, email: user.email,phoneNumber: user.phoneNumber }, key, { expiresIn: "7d" });
+      const token = jwt.sign({ id: user._id, email: user.email, phoneNumber: user.phoneNumber }, key, { expiresIn: "7d" });
       res.status(200).json({
         status: "success",
         token: token,
-        role : user.role
+        role: user.role
       })
 
+    });
+
+    app.get("/all-user", async (req, res) => {
+      try {
+        const data = await userCollection.find().toArray();
+
+        res.status(200).json({
+          status: "success",
+          data: data
+        });
+      } catch (error) {
+        res.status(500).json({
+          status: "fail",
+          message: "Internal Server Error",
+          error: error.message
+        });
+      }
     });
 
 
