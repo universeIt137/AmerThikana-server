@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
+const jwt = require("jsonwebtoken")
 
 // middleware  
 app.use(cors());
@@ -56,6 +57,7 @@ async function run() {
     const projectPriceCollection = client.db('AmerThikana').collection('projectPrice');
     const PlotCategoryCollection = client.db('AmerThikana').collection('PlotCategory');
     const bankInfoCollection = client.db('AmerThikana').collection('bankInfo');
+    const userCollection = client.db('AmerThikana').collection('users');
 
 
 
@@ -1062,7 +1064,7 @@ async function run() {
 
     // top 3 related api
 
-    
+
     app.post('/top3', async (req, res) => {
       const data = req.body;
       const result = await top3Collection.insertOne(data);
@@ -1106,7 +1108,7 @@ async function run() {
 
 
     // booking form related api 
-     app.post('/booking-form', async (req, res) => {
+    app.post('/booking-form', async (req, res) => {
       const data = req.body;
       const result = await bookingFormCollection.insertOne(data);
       res.send(result);
@@ -1147,7 +1149,7 @@ async function run() {
       res.send(result);
     })
 
-   
+
 
     // project price related api 
     app.post('/project-price', async (req, res) => {
@@ -1233,7 +1235,7 @@ async function run() {
       res.send(result);
     })
 
-    
+
     // api for banking information
 
     app.post('/bank-info', async (req, res) => {
@@ -1275,45 +1277,82 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await bankInfoCollection.deleteOne(query);
       res.send(result);
-    })
-
-    
+    });
 
 
 
+    // user authentication related api
+
+    // registration api
+
+    app.post(`/registration`, async (req, res) => {
+      let reqBody = req.body;
+      const { phoneNumber } = req.body;
+      const user = await userCollection.findOne({ phoneNumber: phoneNumber });
+      if (user) {
+        return res.status(409).json({
+          status: "fail",
+          msg: "User already exists this number"
+        })
+      }
+      const data = await userCollection.insertOne({ ...reqBody, role: "user" });
+      res.send(data);
+    });
+
+    // role update api
+
+    app.post("/role-update/:id", async (req, res) => {
+      try {
+        const id = new ObjectId(req.params.id);
+        const filter = { _id: id };
+
+        // ইউজার খুঁজে বের করা
+        const user = await userCollection.findOne(filter);
+        if (!user) {
+          return res.status(404).send({ message: "User not found" });
+        }
+
+        // নতুন রোল সেট করা
+        const updateRole = user.role === "admin" ? "user" : "admin";
+
+        const options = { upsert: true };
+        const updatedInfo = {
+          $set: { role: updateRole } // এখানে `role` কে প্রপারলি সেট করা হয়েছে
+        };
+
+        // ইউজার রোল আপডেট করা
+        const data = await userCollection.updateOne(filter, updatedInfo, options);
+
+        res.send(data);
+      } catch (error) {
+        console.error("Error updating role:", error);
+        res.status(500).send({ message: "Internal Server Error" });
+      }
+    });
+
+    // user login api
 
 
+    app.post("/user-login", async (req, res) => {
+      const { phoneNumber, password, confirmedPassword } = req.body;
+      const user = await userCollection.findOne({ phoneNumber: phoneNumber, password: password, confirmedPassword: confirmedPassword });
+      if (!user) {
+        return res.status(404).json({
+          status: "fail",
+          msg : "Invalid creadential"
+        })
+      };
 
+      const key = process.env.JWT_KEY
 
+      const token = jwt.sign({ id: user._id, email: user.email,phoneNumber: user.phoneNumber }, key, { expiresIn: "7d" });
+      res.status(200).json({
+        status: "success",
+        token: token,
+        role : user.role
+      })
 
-
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    });
 
 
 
