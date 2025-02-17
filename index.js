@@ -14,6 +14,8 @@ app.use(express.json());
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const sendNotificationEmail = require('./emilUtility');
+const { isLogIn } = require('./src/middlewares/authMiddleware');
+const { reset } = require('nodemon');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster1.olinusx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -1353,6 +1355,28 @@ async function run() {
       })
 
     });
+
+
+    app.get("/user-profile", isLogIn, async (req, res) => {
+      let phoneNumber = req.headers.phoneNumber;
+      const filter = {
+        phoneNumber: phoneNumber
+      };
+      const data = await userCollection.findOne(filter);
+      res.send(data)
+    });
+
+    app.put("/profile-update", isLogIn, async (req, res) => {
+      const phoneNumber = req.headers.phoneNumber;
+      const reqBody = req.body;
+      const filter = {
+        phoneNumber: phoneNumber
+      };
+      const updateData = await userCollection.updateOne(filter, { $set: reqBody }, { upsert: true });
+      res.send(updateData)
+    })
+
+
 
     app.get("/all-user", async (req, res) => {
       try {
